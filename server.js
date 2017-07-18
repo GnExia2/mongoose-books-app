@@ -131,6 +131,53 @@ app.delete('/api/books/:id', function (req, res) {
   });
 });
 
+// Create a character associated with a book
+app.post('/api/books/:book_id/characters', function (req, res) {
+  // Get book id from url params (`req.params`)
+  var bookId = req.params.book_id;
+  db.Book.findById(bookId)
+    .populate('author')
+    .exec(function(err, foundBook) {
+      console.log(foundBook);
+      if (err) {
+        res.status(500).json({error: err.message});
+      } else if (foundBook === null) {
+        // Is this the same as checking if the foundBook is undefined?
+        res.status(404).json({error: "No Book found by this ID"});
+      } else {
+        // push character into characters array
+        foundBook.characters.push(req.body);
+        // save the book with the new character
+        foundBook.save();
+        res.status(201).json(foundBook);
+      }
+    });
+});
+
+// Delete a character associated with a book
+app.delete('/api/books/:book_id/characters/:character_id', function (req, res) {
+  // Get book id from url params (`req.params`)
+  var bookId = req.params.book_id;
+  var characterId = req.params.character_id;
+  db.Book.findById(bookId)
+    .populate('author')
+    .exec(function(err, foundBook) {
+      if (err) {
+        res.status(500).json({error: err.message});
+      } else if (foundBook === null) {
+        res.status(404).json({error: "No Book found by this ID"});
+      } else {
+        // find the character by id
+        var deletedCharacter = foundBook.characters.id(characterId);
+        // delete the found character
+        deletedCharacter.remove();
+        // save the found book with the character deleted
+        foundBook.save();
+        // send back the found book without the character
+        res.json(foundBook);
+      }
+    });
+});
 
 app.listen(process.env.PORT || 3000, function () {
   console.log('Book app listening at http://localhost:3000/');

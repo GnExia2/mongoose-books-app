@@ -11,6 +11,12 @@ var BookSchema = new Schema({
      releaseDate: String
 });
 
+// var CharacterSchema = new Schema({
+//   name: [String]
+// });
 
 var Book = mongoose.model('Book', BookSchema);
 module.exports = Book;
+//
+// var Character = mongoose.model('Character', CharacterSchema);
+// module.exports = Character;
