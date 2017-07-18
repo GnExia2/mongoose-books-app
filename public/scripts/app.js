@@ -97,6 +97,37 @@ function deleteBookSuccess(json) {
   render();
 }
 
+
 function deleteBookError() {
   console.log('deletebook error!');
+}
+
+function newCharacterSuccess(json) {
+  var book = json;
+  var bookId = book._id;
+  // find the book with the correct ID and update it
+  for(var index = 0; index < allBooks.length; index++) {
+    if(allBooks[index]._id === bookId) {
+      allBooks[index] = book;
+      break;  // we found our book - no reason to keep searching (this is why we didn't use forEach)
+    }
+  }
+  render();
+}
+
+function newCharacterError() {
+  console.log('adding new character error!');
+}
+
+function deleteCharacterSuccess(json) {
+  var book = json;
+  var bookId = book._id;
+  // find the book with the correct ID and update it
+  for(var index = 0; index < allBooks.length; index++) {
+    if(allBooks[index]._id === bookId) {
+      allBooks[index] = book;
+      break;  // we found our book - no reason to keep searching (this is why we didn't use forEach)
+    }
+  }
+  render();
 }
